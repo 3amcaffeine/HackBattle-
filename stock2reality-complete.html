@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock2Reality - Complete Financial Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary-purple: #7c3aed;
+            --secondary-purple: #a855f7;
+            --dark-bg: #1a1a2e;
+            --card-bg: #242540;
+            --accent-bg: #16213e;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #7b2cbf 100%);
+            background-attachment: fixed;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 70% 10%, rgba(245, 101, 101, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 10% 30%, rgba(16, 185, 129, 0.15) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: -1;
+            animation: gradientShift 15s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% {
+                background-image: 
+                    radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 10%, rgba(245, 101, 101, 0.15) 0%, transparent 40%),
+                    radial-gradient(circle at 10% 30%, rgba(16, 185, 129, 0.15) 0%, transparent 40%);
+            }
+            50% {
+                background-image: 
+                    radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.4) 0%, transparent 50%),
+                    radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 60% 60%, rgba(245, 101, 101, 0.2) 0%, transparent 50%),
+                    radial-gradient(circle at 30% 90%, rgba(16, 185, 129, 0.15) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);
+            }
+        }
+        
+        /* Floating Particles */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px, 80px 80px;
+            pointer-events: none;
+            z-index: -1;
+            animation: particleFloat 20s linear infinite;
+        }
+        
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            100% {
+                transform: translateY(-100vh) translateX(-10px);
+            }
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(36, 37, 64, 0.9) 0%, rgba(22, 33, 62, 0.8) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(147, 51, 234, 0.2);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(147, 51, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(147, 51, 234, 0.4);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(147, 51, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-header {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.8) 100%);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(147, 51, 234, 0.2);
+        }
+
+        .glow-button {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .glow-button:hover {
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #8b5cf6 0%, #c084fc 100%);
+        }
+
+        .input-field {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(83, 52, 131, 0.6) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            color: #f8fafc;
+        }
+
+        .input-field:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2), 0 0 20px rgba(168, 85, 247, 0.3);
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: #a78bfa;
+            opacity: 0.7;
+        }
+
+        /* Dark dropdown for better readability */
+        .dark-dropdown {
+            background: linear-gradient(135deg, rgba(15, 15, 35, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(147, 51, 234, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(147, 51, 234, 0.2);
+        }
+
+        .dark-dropdown option {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            padding: 8px;
+        }
+
+        .ticker {
+            white-space: nowrap;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .ticker-content {
+            display: inline-block;
+            animation: scroll-left 30s linear infinite;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translate3d(100%, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .nav-tab {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-tab:hover {
+            color: #a855f7;
+        }
+
+        .nav-tab.active {
+            color: #a855f7;
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.3), rgba(168, 85, 247, 0.3));
+            border: 1px solid rgba(147, 51, 234, 0.5);
+            border-radius: 8px;
+            padding: 8px 16px;
+        }
+
+        .stock-item {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(83, 52, 131, 0.6) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(147, 51, 234, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stock-item:hover {
+            border-color: rgba(147, 51, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .modal {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .progress-bar {
+            background: linear-gradient(to right, #7c3aed, #a855f7);
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-container {
+            background: rgba(30, 30, 60, 0.6);
+            border: 1px solid rgba(147, 51, 234, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .beta-badge {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Goal categories styling */
+        .goal-category {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(83, 52, 131, 0.6) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(147, 51, 234, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .goal-category:hover {
+            border-color: rgba(147, 51, 234, 0.4);
+            transform: translateY(-2px);
+        }
+    </style>
+    <!-- Modern font imports for stylish typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Design override theme: premium, modern, youth + business friendly -->
+    <style id="s2r-theme-overrides">
+      :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      }
+
+      /* Typography */
+      body { font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif !important; letter-spacing: -0.01em; }
+      .ticker-content { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 500; }
+
+      /* Background polish */
+      body { 
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #1e1e2e 100%) fixed !important;
+      }
+      .ticker { 
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(26, 26, 46, 0.3) 100%) !important;
+        backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,.08); border-bottom: 1px solid rgba(255,255,255,.08);
+      }
+
+      /* Gradient text utility */
+      .gradient-text { background-image: linear-gradient(90deg, #60a5fa, #a78bfa, #fb7185); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+      /* Header/nav */
+      .nav-header { background: linear-gradient(135deg, rgba(0,0,0,.8) 0%, rgba(26,26,46,.9) 100%) !important; backdrop-filter: blur(24px); border-bottom: 2px solid rgba(255,255,255,.08); box-shadow: 0 10px 30px rgba(0,0,0,.2); }
+      .nav-tab { position: relative; transition: all .35s ease; font-weight: 500; letter-spacing: .3px; }
+      .nav-tab::before { content: ''; position: absolute; bottom: -6px; left: 50%; width: 0; height: 3px; background: var(--primary-gradient); transform: translateX(-50%); transition: width .35s ease; border-radius: 2px; }
+      .nav-tab:hover { color: #667eea !important; transform: translateY(-2px); }
+      .nav-tab:hover::before { width: 80%; }
+      .nav-tab.active { color: #667eea !important; background: linear-gradient(145deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.05) 100%); border: 2px solid rgba(102,126,234,.3); border-radius: 16px; padding: 10px 20px; box-shadow: 0 8px 25px rgba(102,126,234,.2), inset 0 1px 0 rgba(255,255,255,.1); }
+      .nav-tab.active::before { display: none; }
+
+      /* Cards */
+      .card { 
+        background: linear-gradient(145deg, rgba(255,255,255,.12) 0%, rgba(255,255,255,.06) 100%) !important; 
+        backdrop-filter: blur(22px) !important; 
+        border: 2px solid rgba(255,255,255,.10) !important; 
+        border-radius: 24px !important; 
+        padding: 2rem !important; 
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,.25), 0 0 40px rgba(102,126,234,.10), inset 0 1px 0 rgba(255,255,255,.10) !important; 
+        transition: all .4s cubic-bezier(.4,0,.2,1) !important;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(102,126,234,.08), transparent);
+        transition: left .6s;
+      }
+      
+      .card:hover { 
+        border-color: rgba(102,126,234,.30) !important; 
+        transform: translateY(-8px) scale(1.02) !important; 
+        box-shadow: 
+          0 35px 70px -15px rgba(0,0,0,.30), 
+          0 0 60px rgba(102,126,234,.15), 
+          0 0 100px rgba(102,126,234,.08),
+          inset 0 1px 0 rgba(255,255,255,.15) !important;
+        animation: cardGlow 2s ease-in-out infinite alternate;
+      }
+      
+      .card:hover::before {
+        left: 100%;
+      }
+      
+      @keyframes cardGlow {
+        from {
+          box-shadow: 
+            0 35px 70px -15px rgba(0,0,0,.30), 
+            0 0 60px rgba(102,126,234,.15), 
+            0 0 100px rgba(102,126,234,.08),
+            inset 0 1px 0 rgba(255,255,255,.15);
+        }
+        to {
+          box-shadow: 
+            0 35px 70px -15px rgba(0,0,0,.30), 
+            0 0 80px rgba(102,126,234,.25), 
+            0 0 120px rgba(102,126,234,.12),
+            inset 0 1px 0 rgba(255,255,255,.15);
+        }
+      }
+
+      /* Buttons */
+      .glow-button { background: var(--primary-gradient) !important; border: 2px solid rgba(255,255,255,.1) !important; text-transform: uppercase; letter-spacing: .5px; font-size: .9rem; font-weight: 700; box-shadow: 0 8px 30px rgba(102,126,234,.30), inset 0 1px 0 rgba(255,255,255,.20) !important; transition: all .35s ease; }
+      .glow-button:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 40px rgba(102,126,234,.40), 0 0 30px rgba(102,126,234,.30), inset 0 1px 0 rgba(255,255,255,.30) !important; background: linear-gradient(135deg, #7c3aed 0%, #667eea 100%) !important; }
+
+      /* Inputs */
+      .input-field { background: linear-gradient(145deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.05) 100%) !important; border: 2px solid rgba(255,255,255,.10) !important; font-weight: 500; letter-spacing: .3px; transition: all .3s ease; }
+      .input-field::placeholder { color: #a1a1aa !important; opacity: .85; }
+      .input-field:focus { border-color: rgba(102,126,234,.5) !important; background: linear-gradient(145deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,.08) 100%) !important; box-shadow: 0 0 0 3px rgba(102,126,234,.20), 0 10px 30px rgba(102,126,234,.10) !important; transform: translateY(-2px); }
+
+      /* Items */
+      .stock-item { background: linear-gradient(145deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.03) 100%) !important; border: 2px solid rgba(255,255,255,.08) !important; transition: all .4s ease; position: relative; overflow: hidden; }
+      .stock-item::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent); transition: left .6s; }
+      .stock-item:hover { border-color: rgba(102,126,234,.30) !important; transform: translateY(-4px) scale(1.02); box-shadow: 0 15px 35px rgba(0,0,0,.20); }
+      .stock-item:hover::before { left: 100%; }
+
+      /* Progress */
+      .progress-container { background: linear-gradient(145deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.02) 100%) !important; border: 2px solid rgba(255,255,255,.10) !important; border-radius: 10px !important; box-shadow: inset 0 2px 5px rgba(0,0,0,.10) !important; }
+      .progress-bar { background: var(--primary-gradient) !important; height: 12px !important; border-radius: 10px !important; box-shadow: 0 4px 15px rgba(102,126,234,.30) !important; position: relative; overflow: hidden; }
+      .progress-bar::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent); animation: s2r-shimmer 2s infinite; }
+      @keyframes s2r-shimmer { 0% { transform: translateX(-100%);} 100% { transform: translateX(200%);} }
+
+      /* Headings */
+      h1, h2 { font-weight: 800; letter-spacing: -0.02em; }
+      h3 { font-weight: 700; }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation Header -->
+    <nav class="nav-header sticky top-0 z-50 p-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">S2R</span>
+                </div>
+                <h1 class="text-2xl font-bold text-white">Stock2Reality</h1>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <span class="nav-tab active" data-page="dashboard">Dashboard</span>
+                <span class="nav-tab" data-page="portfolio">Portfolio</span>
+                <span class="nav-tab" data-page="goals">Goals</span>
+                <span class="nav-tab" data-page="reports">Reports</span>
+                <span class="nav-tab relative" data-page="expenses">
+                    Expenses
+                    <span class="beta-badge absolute -top-1 -right-3 bg-gradient-to-r from-orange-400 to-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold shadow-lg animate-pulse">
+                        β
+                    </span>
+                </span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="hidden md:flex items-center space-x-3">
+                    <span class="text-sm text-gray-300">Welcome, <span class="text-purple-400 font-semibold" id="user-name">User</span></span>
+                    <span class="text-sm text-gray-300">Balance: <span class="text-green-400 font-bold" id="user-balance">₹45,250</span></span>
+                </div>
+                <div class="relative">
+                    <button id="user-menu-btn" class="flex items-center space-x-2 glow-button px-3 py-2 rounded-lg text-white font-medium">
+                        <div class="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                            <span class="text-white text-sm font-bold" id="user-avatar">U</span>
+                        </div>
+                        <span class="hidden sm:inline">Account</span>
+                    </button>
+                    <div id="user-dropdown" class="absolute right-0 mt-2 w-56 dark-dropdown rounded-lg shadow-lg border border-purple-500/30 hidden z-50">
+                        <div class="py-2">
+                            <div class="px-4 py-3 border-b border-purple-500/20">
+                                <p class="text-sm text-gray-300">Signed in as</p>
+                                <p class="text-sm font-medium text-white" id="dropdown-user-email">user@example.com</p>
+                            </div>
+                            <button onclick="showSettings()" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-purple-600/20 hover:text-white flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Settings
+                            </button>
+                            <button onclick="editProfile()" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-purple-600/20 hover:text-white flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                Edit Profile
+                            </button>
+                            <button onclick="updateInvestments()" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-purple-600/20 hover:text-white flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Update Investments
+                            </button>
+                            <div class="border-t border-purple-500/20 my-1"></div>
+                            <button onclick="signOutUser()" class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-600/20 hover:text-red-300 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                                Sign Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Investment Setup Modal -->
+    <div id="investment-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden z-50">
+        <div class="card w-full max-w-md">
+            <h3 class="text-xl font-semibold text-white mb-6">Set Your Investment Amount</h3>
+            <form id="investment-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Initial Investment (₹)</label>
+                    <input type="number" id="initial-investment-input" placeholder="Enter initial investment amount" 
+                           class="w-full input-field rounded-lg p-3" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Additional Investment (₹)</label>
+                    <input type="number" id="additional-investment-input" placeholder="Enter additional investment (optional)" 
+                           class="w-full input-field rounded-lg p-3">
+                </div>
+                <div class="flex space-x-4">
+                    <button type="button" onclick="closeInvestmentModal()" class="flex-1 bg-gray-600 hover:bg-gray-500 py-3 px-4 rounded-lg text-white font-medium transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 glow-button py-3 px-4 rounded-lg text-white font-medium">
+                        Save Investment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Market Ticker -->
+    <div class="ticker bg-gradient-to-r from-purple-900/20 to-pink-900/20 py-2 border-y border-purple-500/20">
+        <div class="ticker-content">
+            <span class="inline-flex items-center space-x-8 text-sm">
+                <span id="market-status" class="flex items-center space-x-2 px-3 py-1 rounded-full bg-green-500/20 border border-green-500/30">
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span class="text-green-400 font-semibold">Market Open</span>
+                </span>
+                <span class="flex items-center space-x-2">
+                    <span class="text-purple-400 font-semibold">NIFTY:</span>
+                    <span id="nifty-price" class="text-green-400">19,674.25</span>
+                    <span id="nifty-change" class="text-green-400">+0.82%</span>
+                </span>
+                <span class="flex items-center space-x-2">
+                    <span class="text-purple-400 font-semibold">SENSEX:</span>
+                    <span id="sensex-price" class="text-green-400">66,023.18</span>
+                    <span id="sensex-change" class="text-green-400">+0.75%</span>
+                </span>
+                <span class="flex items-center space-x-2">
+                    <span class="text-purple-400 font-semibold">TCS:</span>
+                    <span id="tcs-price" class="text-green-400">₹4,125.80</span>
+                    <span id="tcs-change" class="text-green-400">+1.45%</span>
+                </span>
+                <span class="flex items-center space-x-2">
+                    <span class="text-purple-400 font-semibold">INFY:</span>
+                    <span id="infy-price" class="text-green-400">₹1,847.25</span>
+                    <span id="infy-change" class="text-green-400">+2.18%</span>
+                </span>
+                <span class="flex items-center space-x-2">
+                    <span class="text-purple-400 font-semibold">RIL:</span>
+                    <span id="ril-price" class="text-red-400">₹2,697.00</span>
+                    <span id="ril-change" class="text-red-400">-0.65%</span>
+                </span>
+                <span class="flex items-center space-x-2">
+                    <span class="text-purple-400 font-semibold">HDFC:</span>
+                    <span id="hdfc-price" class="text-green-400">₹1,723.40</span>
+                    <span id="hdfc-change" class="text-green-400">+0.95%</span>
+                </span>
+                <span class="flex items-center space-x-2">
+                    <span class="text-purple-400 font-semibold">ICICI:</span>
+                    <span id="icici-price" class="text-green-400">₹1,087.55</span>
+                    <span id="icici-change" class="text-green-400">+1.82%</span>
+                </span>
+                <span class="flex items-center space-x-2">
+                    <span class="text-purple-400 font-semibold">AAPL:</span>
+                    <span id="aapl-price" class="text-green-400">$175.43</span>
+                    <span id="aapl-change" class="text-green-400">+0.45%</span>
+                </span>
+                <span class="flex items-center space-x-2">
+                    <span class="text-purple-400 font-semibold">TESLA:</span>
+                    <span id="tsla-price" class="text-red-400">$248.76</span>
+                    <span id="tsla-change" class="text-red-400">-1.23%</span>
+                </span>
+                <span class="flex items-center space-x-2">
+                    <span class="text-purple-400 font-semibold">BTC:</span>
+                    <span id="btc-price" class="text-green-400">$63,247</span>
+                    <span id="btc-change" class="text-green-400">+2.14%</span>
+                </span>
+            </span>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto p-4 sm:p-8">
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-bold text-white mb-4">Welcome to Stock2Reality</h2>
+                <p class="text-xl text-gray-300">Your complete financial trading and investment platform</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="card text-center">
+                    <h3 class="text-lg font-semibold text-gray-300 mb-2">Portfolio Value</h3>
+                    <p class="text-2xl font-bold text-purple-400">₹15,45,250</p>
+                    <p class="text-sm text-green-400">+₹3,15,250 (25.6%)</p>
+                </div>
+                <div class="card text-center">
+                    <h3 class="text-lg font-semibold text-gray-300 mb-2">Today's P&L</h3>
+                    <p class="text-2xl font-bold text-green-400">+₹8,450</p>
+                    <p class="text-sm text-gray-400">+0.54%</p>
+                </div>
+                <div class="card text-center">
+                    <h3 class="text-lg font-semibold text-gray-300 mb-2">Active Holdings</h3>
+                    <p class="text-2xl font-bold text-blue-400">12</p>
+                    <p class="text-sm text-gray-400">Stocks</p>
+                </div>
+                <div class="card text-center">
+                    <h3 class="text-lg font-semibold text-gray-300 mb-2">Available Funds</h3>
+                    <p class="text-2xl font-bold text-yellow-400">₹45,250</p>
+                    <p class="text-sm text-gray-400">Ready to invest</p>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="card lg:col-span-2">
+                    <h3 class="text-xl font-semibold text-white mb-6">Market Movers - Top Gainers</h3>
+                    <div class="space-y-4" id="market-movers">
+                        <!-- Market movers will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="text-xl font-semibold text-white mb-6">Quick Actions</h3>
+                    <div class="space-y-4">
+                        <button class="w-full glow-button py-3 px-4 rounded-lg text-white font-medium" onclick="showPage('portfolio')">
+                            📊 View Portfolio
+                        </button>
+                        <button class="w-full bg-gray-700 hover:bg-gray-600 py-3 px-4 rounded-lg text-white font-medium transition-colors" onclick="showPage('goals')">
+                            🎯 Manage Goals
+                        </button>
+                        <button class="w-full bg-gray-700 hover:bg-gray-600 py-3 px-4 rounded-lg text-white font-medium transition-colors" onclick="showPage('expenses')">
+                            💰 Track Expenses
+                        </button>
+                        <button class="w-full bg-gray-700 hover:bg-gray-600 py-3 px-4 rounded-lg text-white font-medium transition-colors" onclick="showPage('reports')">
+                            📈 View Reports
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolio Page -->
+        <div id="portfolio" class="page">
+            <h2 class="text-3xl font-bold text-white mb-8">My Portfolio</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <div class="card lg:col-span-2">
+                    <h3 class="text-xl font-semibold text-white mb-6">Holdings - Your Investments</h3>
+                    <div class="space-y-4" id="portfolio-holdings">
+                        <!-- Holdings will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="card">
+                        <h3 class="text-xl font-semibold text-white mb-6">Portfolio Summary</h3>
+                        <div class="space-y-4">
+                        <div class="bg-gray-800/50 p-4 rounded-lg">
+                            <p class="text-gray-400">Initial Investment</p>
+                            <p class="text-xl font-bold text-blue-400" id="portfolio-initial-investment">₹10,00,000</p>
+                        </div>
+                        <div class="bg-gray-800/50 p-4 rounded-lg">
+                            <p class="text-gray-400">Additional Investment</p>
+                            <p class="text-xl font-bold text-purple-400" id="portfolio-additional-investment">+₹2,30,000</p>
+                        </div>
+                        <div class="bg-gray-800/50 p-4 rounded-lg">
+                            <p class="text-gray-400">Total Invested</p>
+                            <p class="text-2xl font-bold text-white" id="portfolio-total-invested">₹12,30,000</p>
+                        </div>
+                        <div class="bg-gray-800/50 p-4 rounded-lg">
+                            <p class="text-gray-400">Current Value</p>
+                            <p class="text-2xl font-bold text-green-400">₹15,45,250</p>
+                        </div>
+                        <div class="bg-gray-800/50 p-4 rounded-lg">
+                            <p class="text-gray-400">Total Profit</p>
+                            <p class="text-xl font-bold text-green-400">+₹3,15,250 (25.6%)</p>
+                        </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="text-xl font-semibold text-white mb-4">Portfolio Performance</h3>
+                        <canvas id="portfolioChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Goals Page -->
+        <div id="goals" class="page">
+            <h2 class="text-3xl font-bold text-white mb-8">Smart Financial Goals</h2>
+            
+            <!-- Financial Overview Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+                <div class="card">
+                    <h3 class="text-lg font-semibold text-white mb-4">📈 Investment Status</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-gray-400 text-sm">Initial Investment</p>
+                            <p class="text-xl font-bold text-white">₹10,00,000</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Current Investment</p>
+                            <p class="text-lg font-bold text-purple-400">₹12,30,000</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Total Profits</p>
+                            <p class="text-lg font-bold text-green-400">₹3,15,250</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="text-lg font-semibold text-white mb-4">🎯 Goal Funding</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-gray-400 text-sm">Monthly Contributions</p>
+                            <p class="text-xl font-bold text-blue-400" id="monthly-contributions">₹15,000</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Profit Allocated</p>
+                            <p class="text-lg font-bold text-green-400" id="allocated-profits">₹1,50,000</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="text-lg font-semibold text-white mb-4">🏦 Savings Account</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-gray-400 text-sm">Current Balance</p>
+                            <p class="text-xl font-bold text-yellow-400" id="savings-balance">₹1,65,250</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Interest Rate</p>
+                            <p class="text-lg font-bold text-white">6.5% p.a.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="text-lg font-semibold text-white mb-4">⚙️ Quick Actions</h3>
+                    <div class="space-y-2">
+                        <button onclick="quickAllocateProfits()" class="w-full glow-button py-2 px-3 rounded-lg text-white text-sm font-medium">
+                            Auto-Allocate Profits
+                        </button>
+                        <button onclick="transferToSavings()" class="w-full bg-yellow-600 hover:bg-yellow-700 py-2 px-3 rounded-lg text-white text-sm font-medium">
+                            Transfer to Savings
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="card">
+                    <h3 class="text-xl font-semibold text-white mb-4">Create Smart Goal</h3>
+                    <form id="goal-form" class="space-y-4">
+                        <input type="text" id="goal-name" placeholder="Goal name (e.g., Dream Vacation)" class="w-full input-field rounded-lg p-3" required>
+                        <select id="goal-type" class="w-full input-field rounded-lg p-3">
+                            <option value="personal">🎯 Personal Dream</option>
+                            <option value="family">👨‍👩‍👧‍👦 Family Goal</option>
+                            <option value="career">💼 Career Growth</option>
+                            <option value="health">🏥 Health & Wellness</option>
+                            <option value="education">📚 Education</option>
+                            <option value="emergency">🚨 Emergency Fund</option>
+                            <option value="retirement">👴 Retirement</option>
+                            <option value="property">🏠 Real Estate</option>
+                        </select>
+                        <select id="goal-priority" class="w-full input-field rounded-lg p-3">
+                            <option value="high">🔥 High Priority (1-2 years)</option>
+                            <option value="medium">⭐ Medium Priority (2-5 years)</option>
+                            <option value="low">💎 Long-term Vision (5+ years)</option>
+                        </select>
+                        <input type="number" id="goal-amount" placeholder="Target amount (₹)" class="w-full input-field rounded-lg p-3" required>
+                        <input type="date" id="goal-deadline" class="w-full input-field rounded-lg p-3">
+                        <textarea id="goal-description" placeholder="Why is this goal important to you?" class="w-full input-field rounded-lg p-3 h-16 resize-none"></textarea>
+                        
+                        <div class="border-t border-gray-600 pt-4">
+                            <h4 class="text-white font-semibold mb-3">🎯 Sub-Goals (Optional)</h4>
+                            <div id="subgoals-container" class="space-y-3">
+                                <div class="subgoal-item bg-gray-800/50 p-3 rounded-lg">
+                                    <input type="text" placeholder="Sub-goal name" class="w-full input-field rounded-lg p-2 mb-2 text-sm" name="subgoal-name">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <input type="number" placeholder="Min contribution (₹)" class="input-field rounded-lg p-2 text-sm" name="min-contribution">
+                                        <input type="number" placeholder="Target amount (₹)" class="input-field rounded-lg p-2 text-sm" name="subgoal-target">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" onclick="addSubGoal()" class="mt-2 w-full bg-gray-600 hover:bg-gray-500 py-2 px-3 rounded-lg text-white text-sm">
+                                + Add Sub-Goal
+                            </button>
+                        </div>
+                        
+                        <button type="submit" class="w-full glow-button py-3 px-4 rounded-lg text-white font-medium">
+                            Create Smart Goal
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="md:col-span-3 space-y-6">
+                    <!-- High Priority Goals -->
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-lg font-semibold text-white">🔥 High Priority Goals</h4>
+                            <span class="text-sm text-gray-400" id="high-priority-count">0 goals</span>
+                        </div>
+                        <div id="high-goals" class="space-y-4">
+                            <!-- High priority goals will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Medium Priority Goals -->
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-lg font-semibold text-white">⭐ Medium Priority Goals</h4>
+                            <span class="text-sm text-gray-400" id="medium-priority-count">0 goals</span>
+                        </div>
+                        <div id="medium-goals" class="space-y-4">
+                            <!-- Medium priority goals will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Long-term Goals -->
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-lg font-semibold text-white">💎 Long-term Vision</h4>
+                            <span class="text-sm text-gray-400" id="low-priority-count">0 goals</span>
+                        </div>
+                        <div id="low-goals" class="space-y-4">
+                            <!-- Long-term goals will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Reports Page -->
+        <div id="reports" class="page">
+            <h2 class="text-3xl font-bold text-white mb-8">Financial Reports</h2>
+            
+            <!-- Reports content would go here -->
+            <div class="card text-center py-16">
+                <h3 class="text-xl text-gray-300 mb-4">Reports & Analytics</h3>
+                <p class="text-gray-400">View detailed financial reports and analytics</p>
+            </div>
+        </div>
+
+        <!-- Expenses Page -->
+        <div id="expenses" class="page">
+            <h2 class="text-3xl font-bold text-white mb-8">
+                Expense Tracking 
+                <span class="beta-badge bg-gradient-to-r from-orange-400 to-red-500 text-white text-sm px-3 py-1 rounded-full font-semibold">Beta</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Add Expense Form -->
+                <div class="card">
+                    <h3 class="text-xl font-semibold text-white mb-6">Add New Expense</h3>
+                    <form id="expense-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                            <input type="text" id="expense-description" placeholder="What did you spend on?" 
+                                   class="w-full input-field rounded-lg p-3" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Amount (₹)</label>
+                            <input type="number" id="expense-amount" placeholder="0" 
+                                   class="w-full input-field rounded-lg p-3" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Category</label>
+                            <select id="expense-category" class="w-full input-field dark-dropdown rounded-lg p-3" required>
+                                <option value="">Select category</option>
+                                <option value="food">Food & Dining</option>
+                                <option value="transport">Transportation</option>
+                                <option value="entertainment">Entertainment</option>
+                                <option value="shopping">Shopping</option>
+                                <option value="utilities">Utilities</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="education">Education</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Date</label>
+                            <input type="date" id="expense-date" class="w-full input-field rounded-lg p-3" required>
+                        </div>
+                        <button type="submit" class="w-full glow-button py-3 px-4 rounded-lg text-white font-medium">
+                            Add Expense
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Recent Expenses and Quick Stats -->
+                <div class="space-y-6 lg:col-span-2">
+                    <div class="card">
+                        <h3 class="text-xl font-semibold text-white mb-6">Recent Expenses</h3>
+                        <div id="recent-expenses" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- Recent expenses will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User Authentication and Session Management
+        class AuthGuard {
+            constructor() {
+                this.sessionTimeout = 30 * 60 * 1000; // 30 minutes
+            }
+            
+            checkAuthentication() {
+                const currentUser = JSON.parse(localStorage.getItem('s2r_user') || 'null');
+                const session = JSON.parse(localStorage.getItem('s2r_session') || 'null');
+                
+                if (!currentUser || !session || !session.isLoggedIn) {
+                    this.redirectToLogin();
+                    return null;
+                }
+                
+                // Check session validity
+                if (!this.isSessionValid(session)) {
+                    this.logout();
+                    return null;
+                }
+                
+                // Update last activity
+                this.updateSession();
+                return currentUser;
+            }
+            
+            isSessionValid(session) {
+                const now = new Date().getTime();
+                const lastActivity = new Date(session.lastActivity).getTime();
+                return (now - lastActivity) < this.sessionTimeout;
+            }
+            
+            updateSession() {
+                const session = JSON.parse(localStorage.getItem('s2r_session') || 'null');
+                if (session) {
+                    session.lastActivity = new Date().toISOString();
+                    localStorage.setItem('s2r_session', JSON.stringify(session));
+                }
+            }
+            
+            logout() {
+                // Save user data before logout for restoration
+                const currentUser = this.getCurrentUser();
+                if (currentUser) {
+                    this.saveUserDataForRestoration(currentUser);
+                }
+                
+                localStorage.removeItem('s2r_user');
+                localStorage.removeItem('s2r_session');
+                // Keep s2r_users for future logins (don't remove this)
+                this.redirectToLogin();
+            }
+            
+            saveUserDataForRestoration(user) {
+                try {
+                    // Create a comprehensive backup of user data
+                    const userData = {
+                        profile: user,
+                        portfolio: window.portfolio || [],
+                        goals: window.goals || [],
+                        expenses: window.expenses || [],
+                        investmentData: window.investmentData || {},
+                        savingsAccount: window.savingsAccount || {},
+                        monthlyBudget: window.monthlyBudget || {},
+                        savedAt: new Date().toISOString()
+                    };
+                    
+                    // Save under user-specific key
+                    const backupKey = `s2r_backup_${user.email}`;
+                    localStorage.setItem(backupKey, JSON.stringify(userData));
+                    
+                    console.log('User data backed up successfully');
+                } catch (error) {
+                    console.error('Failed to backup user data:', error);
+                }
+            }
+            
+            restoreUserData(user) {
+                try {
+                    const backupKey = `s2r_backup_${user.email}`;
+                    const savedData = localStorage.getItem(backupKey);
+                    
+                    if (savedData) {
+                        const userData = JSON.parse(savedData);
+                        
+                        // Restore global data
+                        if (userData.portfolio) window.portfolio = userData.portfolio;
+                        if (userData.goals) window.goals = userData.goals;
+                        if (userData.expenses) window.expenses = userData.expenses;
+                        if (userData.investmentData) window.investmentData = userData.investmentData;
+                        if (userData.savingsAccount) window.savingsAccount = userData.savingsAccount;
+                        if (userData.monthlyBudget) window.monthlyBudget = userData.monthlyBudget;
+                        
+                        console.log('User data restored successfully from:', userData.savedAt);
+                        return true;
+                    }
+                } catch (error) {
+                    console.error('Failed to restore user data:', error);
+                }
+                return false;
+            }
+            
+            redirectToLogin() {
+                window.location.href = 'login.html';
+            }
+            
+            getCurrentUser() {
+                return JSON.parse(localStorage.getItem('s2r_user') || 'null');
+            }
+        }
+        
+        // Initialize authentication and user data
+        const authGuard = new AuthGuard();
+        const currentUser = authGuard.checkAuthentication();
+        
+        if (!currentUser) {
+            // Will redirect to login page, no further execution
+            throw new Error('Authentication failed');
+        }
+        
+        // Global logout function for buttons
+        function logout() {
+            authGuard.logout();
+        }
+
+        // Sign out function for user switching
+        function signOutUser() {
+            if (confirm('Are you sure you want to sign out? Your data will be saved and can be restored when you sign back in.')) {
+                try {
+                    // Export user data to a downloadable file before logout
+                    exportUserDataToFile('signout');
+                } catch (e) {
+                    console.error('Failed to export user data on sign out:', e);
+                }
+                authGuard.logout();
+            }
+        }
+        
+        // Initialize user profile display
+        function initializeUserProfile() {
+            if (currentUser) {
+                // Restore user data if available
+                authGuard.restoreUserData(currentUser);
+                
+                // Update user name display
+                const userNameElements = document.querySelectorAll('#user-name');
+                userNameElements.forEach(el => {
+                    el.textContent = currentUser.name || 'User';
+                });
+                
+                // Update user avatar
+                const userAvatarElements = document.querySelectorAll('#user-avatar');
+                userAvatarElements.forEach(el => {
+                    el.textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
+                });
+                
+                // Update dropdown email
+                document.getElementById('dropdown-user-email').textContent = currentUser.email || 'user@example.com';
+                
+                // Set initial balance (could be from user data)
+                const balance = currentUser.investmentData?.currentInvestment || 1545250;
+                document.getElementById('user-balance').textContent = `₹${balance.toLocaleString('en-IN')}`;
+            }
+        }
+
+        // Investment Modal Functions
+        function showInvestmentModal() {
+            document.getElementById('investment-modal').classList.remove('hidden');
+        }
+
+        function closeInvestmentModal() {
+            document.getElementById('investment-modal').classList.add('hidden');
+        }
+
+        function saveInvestmentData() {
+            const initialInvestment = parseInt(document.getElementById('initial-investment-input').value) || 0;
+            const additionalInvestment = parseInt(document.getElementById('additional-investment-input').value) || 0;
+            
+            // Update current user's investment data
+            if (currentUser) {
+                currentUser.investmentData = {
+                    initialInvestment: initialInvestment,
+                    additionalInvestment: additionalInvestment,
+                    currentInvestment: initialInvestment + additionalInvestment
+                };
+                
+                // Save updated user data
+                localStorage.setItem('s2r_user', JSON.stringify(currentUser));
+                authGuard.saveUserDataForRestoration(currentUser);
+                
+                // Update UI
+                document.getElementById('user-balance').textContent = `₹${currentUser.investmentData.currentInvestment.toLocaleString('en-IN')}`;
+                document.getElementById('portfolio-initial-investment').textContent = `₹${initialInvestment.toLocaleString('en-IN')}`;
+                document.getElementById('portfolio-additional-investment').textContent = `+₹${additionalInvestment.toLocaleString('en-IN')}`;
+                document.getElementById('portfolio-total-invested').textContent = `₹${(initialInvestment + additionalInvestment).toLocaleString('en-IN')}`;
+                
+                // Also export a local file backup so user can keep a copy
+                try {
+                    exportUserDataToFile('investment-save');
+                } catch (e) {
+                    console.error('Failed to export user data on investment save:', e);
+                }
+                
+                closeInvestmentModal();
+                alert('Investment data saved successfully! A backup file was downloaded to your computer.');
+            }
+        }
+
+        // Application State
+        let currentPage = 'dashboard';
+        let userProfile = currentUser;
+        // User's personal portfolio holdings
+        let portfolio = [
+            { symbol: 'TCS', name: 'Tata Consultancy Services', quantity: 50, buyPrice: 3900, currentPrice: 4125.80 },
+            { symbol: 'INFY', name: 'Infosys Limited', quantity: 75, buyPrice: 1750, currentPrice: 1847.25 },
+            { symbol: 'RIL', name: 'Reliance Industries', quantity: 25, buyPrice: 2800, currentPrice: 2697.00 },
+            { symbol: 'HDFC', name: 'HDFC Bank', quantity: 30, buyPrice: 1650, currentPrice: 1723.40 },
+            { symbol: 'ICICI', name: 'ICICI Bank', quantity: 40, buyPrice: 920, currentPrice: 1087.55 }
+        ];
+        
+        // Market movers - Top gainers across the market (not user-specific)
+        let marketMovers = [
+            { symbol: 'ADANIPOWER', name: 'Adani Power Ltd', currentPrice: 487.50, change: 12.85, changePercent: 2.71 },
+            { symbol: 'COALINDIA', name: 'Coal India Ltd', currentPrice: 425.30, change: 10.80, changePercent: 2.61 },
+            { symbol: 'POWERGRID', name: 'Power Grid Corporation', currentPrice: 312.40, change: 7.95, changePercent: 2.61 },
+            { symbol: 'ONGC', name: 'Oil & Natural Gas Corp', currentPrice: 289.75, change: 7.15, changePercent: 2.53 },
+            { symbol: 'NTPC', name: 'NTPC Ltd', currentPrice: 355.20, change: 8.30, changePercent: 2.39 },
+            { symbol: 'BPCL', name: 'Bharat Petroleum Corp', currentPrice: 295.60, change: 6.85, changePercent: 2.37 },
+            { symbol: 'HCLTECH', name: 'HCL Technologies', currentPrice: 1654.30, change: 35.40, changePercent: 2.19 },
+            { symbol: 'LT', name: 'Larsen & Toubro', currentPrice: 3487.90, change: 72.50, changePercent: 2.12 }
+        ];
+
+        // Sample expenses data
+        let expenses = [
+            { id: 1, date: '2024-09-24', category: 'food', amount: 450, description: 'Lunch at restaurant' },
+            { id: 2, date: '2024-09-24', category: 'transport', amount: 200, description: 'Uber ride' },
+            { id: 3, date: '2024-09-23', category: 'food', amount: 800, description: 'Grocery shopping' },
+            { id: 4, date: '2024-09-23', category: 'entertainment', amount: 500, description: 'Movie tickets' },
+            { id: 5, date: '2024-09-22', category: 'shopping', amount: 1200, description: 'Clothing' }
+        ];
+
+        // Goals data
+        let goals = [
+            { id: 1, name: 'Emergency Fund', category: 'smart', amount: 500000, currentAmount: 250000, targetDate: '2025-12-31' },
+            { id: 2, name: 'House Down Payment', category: 'smart', amount: 2500000, currentAmount: 850000, targetDate: '2026-06-30' },
+            { id: 3, name: 'Europe Travel', category: 'personal', amount: 500000, currentAmount: 400000, targetDate: '2025-03-15' },
+            { id: 4, name: 'Luxury Car', category: 'personal', amount: 2500000, currentAmount: 375000, targetDate: '2027-01-01' }
+        ];
+
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+            
+            currentPage = pageId;
+            
+            // Initialize page-specific content
+            switch(pageId) {
+                case 'portfolio':
+                    initPortfolioPage();
+                    break;
+                case 'dashboard':
+                    initDashboard();
+                    break;
+                case 'expenses':
+                    initExpensePage();
+                    break;
+                case 'goals':
+                    initGoalsPage();
+                    break;
+            }
+        }
+
+        // Initialize Dashboard
+        function initDashboard() {
+            updateMarketStatus();
+            
+            const container = document.getElementById('market-movers');
+            container.innerHTML = '';
+            
+            // Use global marketMovers array (top gainers)
+            marketMovers.forEach(stock => {
+                const changeClass = stock.changePercent >= 0 ? 'text-green-400' : 'text-red-400';
+                const changeSymbol = stock.changePercent >= 0 ? '+' : '';
+                
+                container.innerHTML += `
+                    <div class="stock-item p-4 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white">${stock.symbol}</h4>
+                                    <p class="text-sm text-gray-400">${stock.name}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-white font-bold">₹${stock.currentPrice}</p>
+                                <p class="${changeClass} font-bold">${changeSymbol}${stock.changePercent.toFixed(2)}%</p>
+                                <p class="text-xs text-gray-500">${changeSymbol}₹${stock.change}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function updateMarketStatus() {
+            const now = new Date();
+            const hour = now.getHours();
+            const day = now.getDay(); // 0 = Sunday, 6 = Saturday
+            
+            const marketStatusElement = document.getElementById('market-status');
+            
+            // Market is open Mon-Fri 9:15 AM to 3:30 PM IST
+            const isWeekend = day === 0 || day === 6;
+            const isMarketHours = hour >= 9 && hour < 16; // Simplified for demo
+            
+            if (isWeekend || !isMarketHours) {
+                marketStatusElement.innerHTML = `
+                    <div class="w-2 h-2 bg-red-400 rounded-full"></div>
+                    <span class="text-red-400 font-semibold">Market Closed</span>
+                `;
+                marketStatusElement.className = "flex items-center space-x-2 px-3 py-1 rounded-full bg-red-500/20 border border-red-500/30";
+            } else {
+                marketStatusElement.innerHTML = `
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span class="text-green-400 font-semibold">Market Open</span>
+                `;
+                marketStatusElement.className = "flex items-center space-x-2 px-3 py-1 rounded-full bg-green-500/20 border border-green-500/30";
+            }
+        }
+
+        // Initialize Portfolio Page
+        function initPortfolioPage() {
+            const container = document.getElementById('portfolio-holdings');
+            container.innerHTML = '';
+            
+            portfolio.forEach(stock => {
+                const currentValue = stock.quantity * stock.currentPrice;
+                const investedValue = stock.quantity * stock.buyPrice;
+                const pnl = currentValue - investedValue;
+                const pnlPercent = ((pnl / investedValue) * 100).toFixed(2);
+                const pnlClass = pnl >= 0 ? 'text-green-400' : 'text-red-400';
+                const pnlSymbol = pnl >= 0 ? '+' : '';
+                
+                container.innerHTML += `
+                    <div class="stock-item p-4 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white">${stock.symbol}</h4>
+                                    <p class="text-sm text-gray-400">${stock.name}</p>
+                                    <p class="text-sm text-gray-400">${stock.quantity} shares @ ₹${stock.currentPrice}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-white">₹${currentValue.toLocaleString('en-IN')}</p>
+                                <p class="${pnlClass} font-bold">${pnlSymbol}₹${Math.abs(pnl).toLocaleString('en-IN')}</p>
+                                <p class="${pnlClass} text-sm">${pnlSymbol}${pnlPercent}%</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Initialize Goals Page
+        function initGoalsPage() {
+            // Initialize dropdown handlers
+            document.getElementById('smart-goal-dropdown').addEventListener('change', function() {
+                const value = this.value;
+                if (value) {
+                    console.log('Smart goal selected:', value);
+                    // Add logic to create smart goal
+                }
+            });
+
+            document.getElementById('personal-dream-dropdown').addEventListener('change', function() {
+                const value = this.value;
+                if (value) {
+                    console.log('Personal dream selected:', value);
+                    // Add logic to create personal dream
+                }
+            });
+
+            // Goal form submission
+            document.getElementById('goal-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const goalData = {
+                    id: goals.length + 1,
+                    name: document.getElementById('goal-name').value,
+                    amount: parseInt(document.getElementById('goal-amount').value),
+                    category: document.getElementById('goal-category').value,
+                    targetDate: document.getElementById('goal-date').value,
+                    currentAmount: 0
+                };
+                
+                goals.push(goalData);
+                alert('Goal created successfully!');
+                e.target.reset();
+            });
+        }
+
+        // Initialize Expenses Page
+        function initExpensePage() {
+            renderRecentExpenses();
+            
+            // Set today's date as default
+            document.getElementById('expense-date').value = new Date().toISOString().split('T')[0];
+            
+            // Handle expense form submission
+            document.getElementById('expense-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const newExpense = {
+                    id: expenses.length + 1,
+                    date: document.getElementById('expense-date').value,
+                    category: document.getElementById('expense-category').value,
+                    amount: parseInt(document.getElementById('expense-amount').value),
+                    description: document.getElementById('expense-description').value
+                };
+                
+                expenses.unshift(newExpense);
+                renderRecentExpenses();
+                
+                // Reset form
+                e.target.reset();
+                document.getElementById('expense-date').value = new Date().toISOString().split('T')[0];
+                
+                alert('Expense added successfully!');
+            });
+        }
+
+        function renderRecentExpenses() {
+            const container = document.getElementById('recent-expenses');
+            container.innerHTML = '';
+            
+            const sortedExpenses = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
+            
+            sortedExpenses.forEach(expense => {
+                const categoryIcons = {
+                    food: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z"></path></svg>`,
+                    transport: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17l4 4 4-4m-4-5v9M3 12v3c0 1.657 1.343 3 3 3h12c1.657 0 3-1.343 3-3v-3M3 12V8c0-1.657 1.343-3 3-3h12c1.657 0 3 1.343 3 3v4"></path></svg>`,
+                    entertainment: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>`,
+                    shopping: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"></path></svg>`,
+                    utilities: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>`,
+                    healthcare: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>`,
+                    education: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>`,
+                    other: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>`
+                };
+                
+                container.innerHTML += `
+                    <div class="bg-gray-800/50 p-3 rounded-lg flex justify-between items-center">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center text-white">
+                                ${categoryIcons[expense.category]}
+                            </div>
+                            <div>
+                                <p class="text-white font-medium">${expense.description}</p>
+                                <p class="text-sm text-gray-400">${formatDate(expense.date)} • ${capitalize(expense.category)}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-red-400 font-bold">₹${expense.amount.toLocaleString('en-IN')}</p>
+                        </div>
+                        <button onclick="deleteExpense(${expense.id})" class="ml-3 text-red-400 hover:text-red-300 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteExpense(expenseId) {
+            expenses = expenses.filter(e => e.id !== expenseId);
+            renderRecentExpenses();
+        }
+
+        // User dropdown functionality
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+        
+        // Settings functions
+        function showSettings() {
+            alert('Settings panel would open here');
+        }
+        
+        function editProfile() {
+            alert('Profile editing would open here');
+        }
+        
+        function updateInvestments() {
+            showInvestmentModal();
+        }
+
+        // Utility functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-IN', { 
+                day: 'numeric', 
+                month: 'short' 
+            });
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Download helpers to save user data as a file locally (JSON)
+        function downloadJSON(filename, dataObj) {
+            try {
+                const dataStr = JSON.stringify(dataObj, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 0);
+            } catch (e) {
+                console.error('Failed to trigger JSON download:', e);
+            }
+        }
+
+        function exportUserDataToFile(reason) {
+            const ts = new Date().toISOString().replace(/[:.]/g, '-');
+            const email = (currentUser && currentUser.email ? currentUser.email : 'user').replace(/[^a-zA-Z0-9-_\.]/g, '_');
+            const filename = `S2R-${reason}-${email}-${ts}.json`;
+            const snapshot = {
+                reason,
+                savedAt: new Date().toISOString(),
+                profile: currentUser || null,
+                portfolio: window.portfolio || [],
+                goals: window.goals || [],
+                expenses: window.expenses || [],
+                investmentData: (currentUser && currentUser.investmentData) ? currentUser.investmentData : {},
+                marketMovers: window.marketMovers || [],
+            };
+            downloadJSON(filename, snapshot);
+        }
+
+        function updatePrices() {
+            // Simulate price updates for ticker
+            const elements = [
+                { id: 'nifty-price', base: 19674, symbol: '' },
+                { id: 'sensex-price', base: 66023, symbol: '' },
+                { id: 'tcs-price', base: 4125, symbol: '₹' },
+                { id: 'infy-price', base: 1847, symbol: '₹' },
+                { id: 'ril-price', base: 2697, symbol: '₹' },
+                { id: 'hdfc-price', base: 1723, symbol: '₹' },
+                { id: 'icici-price', base: 1087, symbol: '₹' },
+                { id: 'aapl-price', base: 175, symbol: '$' },
+                { id: 'tsla-price', base: 248, symbol: '$' },
+                { id: 'btc-price', base: 63247, symbol: '$' }
+            ];
+            
+            elements.forEach(elem => {
+                const element = document.getElementById(elem.id);
+                if (element) {
+                    const change = (Math.random() - 0.5) * (elem.base * 0.002);
+                    const newPrice = elem.base + change;
+                    element.textContent = `${elem.symbol}${newPrice.toFixed(2)}`;
+                }
+            });
+        }
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Initialize user profile display
+                initializeUserProfile();
+                
+                // Setup user menu dropdown
+                document.getElementById('user-menu-btn').addEventListener('click', toggleUserDropdown);
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    const dropdown = document.getElementById('user-dropdown');
+                    const menuBtn = document.getElementById('user-menu-btn');
+                    if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+
+                // Setup investment modal
+                document.getElementById('investment-form').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    saveInvestmentData();
+                });
+                
+                // Initialize dashboard by default
+                initDashboard();
+                
+                // Setup navigation
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const pageName = this.getAttribute('data-page');
+                        if (pageName) {
+                            showPage(pageName);
+                        }
+                    });
+                });
+                
+                // Start real-time price updates
+                setInterval(updatePrices, 3000);
+                updatePrices();
+                
+                console.log('Stock2Reality Complete app initialized successfully');
+                
+            } catch (error) {
+                console.error('Error initializing application:', error);
+                if (error.message === 'Authentication failed') {
+                    // User will be redirected to login by authGuard
+                }
+            }
+        });
+    </script>
+</body>
+</html>
